@@ -13,7 +13,7 @@ app.config['JWT_SECRET_KEY'] = 'key'
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
-# Модель User
+# Модель Користувача
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -24,7 +24,7 @@ class User(db.Model):
 def create_tables():
     db.create_all()
 
-# Реєстрація користувача
+# Реєстрація Юзера
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -44,7 +44,7 @@ def register():
 def login():
     data = request.get_json()
 
-    # Перевірка, чи існує користувач
+    # Перевірка, на  існування користувача  в базі
     user = User.query.filter_by(username=data['username']).first()
     
     # Перевірка правильності пароля
@@ -63,7 +63,7 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify({"message": f"Hello user {current_user}, you are authorized!"}), 200
 
-# Приклад іншого захищеного ендпоінта (наприклад, список книг)
+# Приклад іншого захищеного ендпоінта 
 @app.route('/books', methods=['GET'])
 @jwt_required()
 def get_books():
@@ -74,7 +74,7 @@ def get_books():
 # Змінна для зберігання відкликаних токенів
 revoked_tokens = set()
 
-# Логіка для logout (відкликання токену)
+# Логіка для logout 
 @app.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
